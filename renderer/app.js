@@ -149,8 +149,8 @@ function stepFrame(dir) {
 
 function syncPlayIcon() {
   const playing = !video.paused && !video.ended;
-  $('iconPlay').hidden = playing;
-  $('iconPause').hidden = !playing;
+  $('iconPlay').toggleAttribute('hidden', playing);
+  $('iconPause').toggleAttribute('hidden', !playing);
 }
 video.addEventListener('play', syncPlayIcon);
 video.addEventListener('pause', () => {
@@ -169,8 +169,8 @@ function setVolume(v) {
 
 function syncMute() {
   const muted = video.muted || video.volume === 0;
-  $('iconVol').hidden = muted;
-  $('iconMute').hidden = !muted;
+  $('iconVol').toggleAttribute('hidden', muted);
+  $('iconMute').toggleAttribute('hidden', !muted);
 }
 
 function toggleFullscreen() {
