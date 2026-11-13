@@ -1,0 +1,84 @@
+{
+  "name": "cutview",
+  "version": "1.0.0",
+  "description": "Simple video viewer with a built-in trim editor",
+  "main": "main.js",
+  "private": true,
+  "author": "RANOC304",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis portable"
+  },
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.ranoc304.cutview",
+    "productName": "CutView",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*"
+    ],
+    "asarUnpack": [
+      "node_modules/ffmpeg-static/**"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": false,
+      "artifactName": "CutView-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "CutView-${version}-portable.${ext}"
+    },
+    "fileAssociations": [
+      {
+        "ext": [
+          "mp4",
+          "m4v",
+          "mkv",
+          "webm",
+          "mov",
+          "avi",
+          "wmv",
+          "flv",
+          "mpg",
+          "mpeg",
+          "ts",
+          "m2ts",
+          "3gp",
+          "ogv"
+        ],
+        "name": "Video file",
+        "description": "Video file",
+        "role": "Viewer"
+      }
+    ]
+  }
+}
