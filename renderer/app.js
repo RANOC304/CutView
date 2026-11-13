@@ -24,7 +24,7 @@ const state = {
   drag: null, // active handle drag
   scrubbing: null, // element currently scrubbed
   previewEnd: null,
-  settings: { exportDir: '', askPath: false, fastCopy: false },
+  settings: { exportDir: '', askPath: false, fastCopy: false, language: 'fr' },
 };
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
@@ -75,7 +75,7 @@ function setEnabled(on) {
 
 function loadFile(info) {
   if (!info) return;
-  if (state.busy) return toast('Please wait for the current conversion to finish.');
+  if (state.busy) return toast(tr('toast.wait'));
   state.src = info;
   state.proxy = false;
   state.loaded = false;
@@ -89,12 +89,12 @@ function loadFile(info) {
 
 async function fallbackToProxy() {
   const info = state.src;
-  setBusy('This format needs a quick conversion before it can be previewed…');
+  setBusy(tr('busy.convert'));
   const res = await api.makeProxy(info.path);
   if (state.src !== info) return;
   setBusy(null);
   if (!res.ok) {
-    if (!res.canceled) toast(`This video can't be played: ${res.error || 'unsupported format'}`, { error: true, ms: 12000 });
+    if (!res.canceled) toast(tr('toast.cantPlay', { error: res.error || tr('toast.unsupported') }), { error: true, ms: 12000 });
     return;
   }
   state.proxy = true;
@@ -103,7 +103,7 @@ async function fallbackToProxy() {
 
 video.addEventListener('error', () => {
   if (!state.src || state.proxy || state.busy) {
-    if (state.proxy) toast("This video can't be played.", { error: true });
+    if (state.proxy) toast(tr('toast.cantPlayShort'), { error: true });
     return;
   }
   fallbackToProxy();
@@ -284,7 +284,7 @@ function onHandleMove(e) {
   (which === 'start' ? $('handleL') : $('handleR')).classList.toggle('snapped', snapped);
 
   const tip = $('dragTip');
-  tip.textContent = fmt(t, true) + (snapped ? '  ·  snapped to playhead' : '');
+  tip.textContent = fmt(t, true) + (snapped ? '  ·  ' + tr('ed.snapped') : '');
   tip.style.left = `${(t / state.duration) * r.width}px`;
   tip.hidden = false;
 }
@@ -415,8 +415,7 @@ async function doExport() {
   if (!state.loaded || !state.src) return;
   video.pause();
   const modal = $('exportModal');
-  $('exportTitle').textContent = 'Exporting…';
-  $('exportText').textContent = state.settings.askPath ? 'Choose where to save the video…' : 'Starting…';
+  $('exportText').textContent = tr(state.settings.askPath ? 'exp.choose' : 'exp.starting');
   $('exportFill').style.width = '0%';
   modal.hidden = false;
 
@@ -424,9 +423,9 @@ async function doExport() {
   modal.hidden = true;
 
   if (res.ok) {
-    toast(`Saved ${res.output}`, { action: { label: 'Show in folder', run: () => api.reveal(res.output) }, ms: 15000 });
+    toast(tr('toast.saved', { path: res.output }), { action: { label: tr('toast.show'), run: () => api.reveal(res.output) }, ms: 15000 });
   } else if (!res.canceled) {
-    toast(`Export failed: ${res.error || 'unknown error'}`, { error: true, ms: 15000 });
+    toast(tr('toast.exportFailed', { error: res.error || tr('toast.unknown') }), { error: true, ms: 15000 });
   }
 }
 
@@ -447,9 +446,8 @@ function syncSettingsUi() {
   $('exportDir').value = s.exportDir || '';
   $('askPath').checked = s.askPath;
   $('fastCopy').checked = s.fastCopy;
-  $('askNote').textContent = s.askPath
-    ? 'A “Save as” window opens before every export.'
-    : 'Off: the new video is saved automatically next to the original.';
+  $('language').value = s.language;
+  $('askNote').textContent = tr(s.askPath ? 'set.askOn' : 'set.askOff');
 }
 
 async function updateSettings(patch) {
@@ -470,6 +468,10 @@ $('btnBrowse').addEventListener('click', async () => {
   if (dir) updateSettings({ exportDir: dir });
 });
 $('btnClearDir').addEventListener('click', () => updateSettings({ exportDir: '' }));
+$('language').addEventListener('change', async (e) => {
+  setLanguage(e.target.value);
+  await updateSettings({ language: e.target.value });
+});
 $('askPath').addEventListener('change', (e) => updateSettings({ askPath: e.target.checked }));
 $('fastCopy').addEventListener('change', (e) => updateSettings({ fastCopy: e.target.checked }));
 
@@ -571,6 +573,7 @@ window.addEventListener('drop', async (e) => {
 (async function init() {
   setEnabled(false);
   state.settings = await api.getSettings();
+  setLanguage(state.settings.language);
   syncSettingsUi();
 
   let vol = 1;

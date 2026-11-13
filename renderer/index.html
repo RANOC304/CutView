@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,22 +17,22 @@
           <div class="empty-card">
             <svg viewBox="0 0 24 24" width="44" height="44" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             <h1>CutView</h1>
-            <p>Open a video, or drop one anywhere in this window.</p>
-            <button id="emptyOpen" class="btn primary">Open a video</button>
+            <p data-i18n="empty.text"></p>
+            <button id="emptyOpen" class="btn primary" data-i18n="empty.open"></button>
           </div>
         </div>
         <div id="busy" hidden>
           <div class="busy-card">
-            <div id="busyText">Preparing a preview…</div>
+            <div id="busyText"></div>
             <div class="bar"><div id="busyFill"></div></div>
-            <button id="busyCancel" class="btn">Cancel</button>
+            <button id="busyCancel" class="btn" data-i18n="common.cancel"></button>
           </div>
         </div>
-        <div id="dropHint" hidden>Drop the video to open it</div>
+        <div id="dropHint" hidden data-i18n="drop.hint"></div>
       </div>
 
       <div class="pad">
-        <div id="seek" class="rail-area" title="Click to jump to a moment">
+        <div id="seek" class="rail-area" data-i18n-title="seek.title">
           <div class="rail">
             <div id="seekSel"></div>
             <div id="seekFill"></div>
@@ -43,19 +43,19 @@
       </div>
 
       <div class="controls pad">
-        <button id="btnOpen" class="icon" title="Open a video (Ctrl+O)"><svg viewBox="0 0 24 24"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></button>
+        <button id="btnOpen" class="icon" data-i18n-title="btn.open"><svg viewBox="0 0 24 24"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></button>
         <span class="sep"></span>
-        <button id="btnFramePrev" class="icon" title="Previous frame ( , )"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zM9.5 12L18 18V6z"/></svg></button>
-        <button id="btnBack" class="icon" title="Back 5 s (←)"><svg viewBox="0 0 24 24"><path d="M11 6v12l-8.5-6zM21 6v12l-8.5-6z"/></svg></button>
-        <button id="btnPlay" class="icon play" title="Play / Pause (Space)">
+        <button id="btnFramePrev" class="icon" data-i18n-title="btn.framePrev"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zM9.5 12L18 18V6z"/></svg></button>
+        <button id="btnBack" class="icon" data-i18n-title="btn.back"><svg viewBox="0 0 24 24"><path d="M11 6v12l-8.5-6zM21 6v12l-8.5-6z"/></svg></button>
+        <button id="btnPlay" class="icon play" data-i18n-title="btn.play">
           <svg id="iconPlay" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
           <svg id="iconPause" viewBox="0 0 24 24" hidden><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
         </button>
-        <button id="btnFwd" class="icon" title="Forward 5 s (→)"><svg viewBox="0 0 24 24"><path d="M13 6v12l8.5-6zM3 6v12l8.5-6z"/></svg></button>
-        <button id="btnFrameNext" class="icon" title="Next frame ( . )"><svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM14.5 12L6 18V6z"/></svg></button>
+        <button id="btnFwd" class="icon" data-i18n-title="btn.fwd"><svg viewBox="0 0 24 24"><path d="M13 6v12l8.5-6zM3 6v12l8.5-6z"/></svg></button>
+        <button id="btnFrameNext" class="icon" data-i18n-title="btn.frameNext"><svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM14.5 12L6 18V6z"/></svg></button>
         <span id="timeLabel" class="time">0:00 / 0:00</span>
         <span class="grow"></span>
-        <label class="speed" title="Playback speed">
+        <label class="speed" data-i18n-title="btn.speed">
           <select id="speed">
             <option value="0.25">0.25×</option>
             <option value="0.5">0.5×</option>
@@ -66,12 +66,12 @@
             <option value="2">2×</option>
           </select>
         </label>
-        <button id="btnMute" class="icon" title="Mute (M)">
+        <button id="btnMute" class="icon" data-i18n-title="btn.mute">
           <svg id="iconVol" viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
           <svg id="iconMute" viewBox="0 0 24 24" hidden><path d="M3 9v6h4l5 4V5L7 9H3z"/><path d="M16 9l5 6m0-6l-5 6" class="stroke"/></svg>
         </button>
-        <input id="volume" type="range" min="0" max="1" step="0.01" value="1" title="Volume (↑ / ↓)">
-        <button id="btnFull" class="icon" title="Fullscreen (F)"><svg viewBox="0 0 24 24"><path d="M5 5h5v2H7v3H5zM14 5h5v5h-2V7h-3zM5 14h2v3h3v2H5zM17 14h2v5h-5v-2h3z"/></svg></button>
+        <input id="volume" type="range" min="0" max="1" step="0.01" value="1" data-i18n-title="btn.volume">
+        <button id="btnFull" class="icon" data-i18n-title="btn.full"><svg viewBox="0 0 24 24"><path d="M5 5h5v2H7v3H5zM14 5h5v5h-2V7h-3zM5 14h2v3h3v2H5zM17 14h2v5h-5v-2h3z"/></svg></button>
       </div>
     </div>
 
@@ -79,24 +79,24 @@
     <section id="editor">
       <div class="editor-head pad">
         <div class="group">
-          <button id="btnSetStart" class="btn" title="Start the new video at the current moment (I)">Start here <kbd>I</kbd></button>
-          <button id="btnSetEnd" class="btn" title="End the new video at the current moment (O)">End here <kbd>O</kbd></button>
-          <button id="btnPreview" class="btn" title="Play only the selected part">Preview</button>
-          <button id="btnReset" class="btn ghost" title="Select the whole video again">Reset</button>
+          <button id="btnSetStart" class="btn" data-i18n-title="ed.startHere.title"><span data-i18n="ed.startHere"></span> <kbd>I</kbd></button>
+          <button id="btnSetEnd" class="btn" data-i18n-title="ed.endHere.title"><span data-i18n="ed.endHere"></span> <kbd>O</kbd></button>
+          <button id="btnPreview" class="btn" data-i18n="ed.preview" data-i18n-title="ed.preview.title"></button>
+          <button id="btnReset" class="btn ghost" data-i18n="ed.reset" data-i18n-title="ed.reset.title"></button>
         </div>
         <div class="readouts">
-          <span><em>Start</em><b id="roStart">0:00.000</b></span>
-          <span><em>End</em><b id="roEnd">0:00.000</b></span>
-          <span><em>Length</em><b id="roLen">0:00.000</b></span>
+          <span><em data-i18n="ed.start"></em><b id="roStart">0:00.000</b></span>
+          <span><em data-i18n="ed.end"></em><b id="roEnd">0:00.000</b></span>
+          <span><em data-i18n="ed.length"></em><b id="roLen">0:00.000</b></span>
         </div>
         <span class="grow"></span>
-        <button id="btnSettings" class="btn" title="Export settings">
+        <button id="btnSettings" class="btn" data-i18n-title="ed.settings.title">
           <svg viewBox="0 0 24 24" class="inline"><path class="stroke" d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle class="stroke" cx="16" cy="7" r="2"/><circle class="stroke" cx="8" cy="17" r="2"/></svg>
-          Settings
+          <span data-i18n="ed.settings"></span>
         </button>
-        <button id="btnExport" class="btn primary" title="Save the selected part as a new video (Ctrl+E)">
+        <button id="btnExport" class="btn primary" data-i18n-title="ed.export.title">
           <svg viewBox="0 0 24 24" class="inline"><path class="stroke" d="M12 3v11m0 0l-4-4m4 4l4-4M5 19h14"/></svg>
-          Export
+          <span data-i18n="ed.export"></span>
         </button>
       </div>
 
@@ -108,61 +108,70 @@
             <div id="dimR" class="dim"></div>
             <div id="selection"></div>
             <div id="magnet" hidden></div>
-            <div id="handleL" class="handle left" title="Drag to set the start"><i></i></div>
-            <div id="handleR" class="handle right" title="Drag to set the end"><i></i></div>
+            <div id="handleL" class="handle left" data-i18n-title="ed.handleL"><i></i></div>
+            <div id="handleR" class="handle right" data-i18n-title="ed.handleR"><i></i></div>
             <div id="playhead"></div>
             <div id="dragTip" class="tip" hidden></div>
             <div id="trackTip" class="tip" hidden></div>
           </div>
         </div>
       </div>
-      <p class="hint pad">Drag the amber handles to trim. They snap onto the red line (the current moment) when you get close.</p>
+      <p class="hint pad" data-i18n="ed.hint"></p>
     </section>
   </div>
 
   <!-- ===== Settings dialog ===== -->
   <div id="settingsModal" class="modal" hidden>
     <div class="dialog">
-      <h2>Export settings</h2>
+      <h2 data-i18n="set.title"></h2>
 
       <div class="field">
-        <label>Default export folder</label>
+        <label for="language" data-i18n="set.language"></label>
+        <select id="language">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label data-i18n="set.folder"></label>
         <div class="row">
-          <input id="exportDir" type="text" readonly placeholder="Not set">
-          <button id="btnBrowse" class="btn">Browse…</button>
-          <button id="btnClearDir" class="btn ghost">Clear</button>
+          <input id="exportDir" type="text" readonly data-i18n-ph="set.notSet">
+          <button id="btnBrowse" class="btn" data-i18n="set.browse"></button>
+          <button id="btnClearDir" class="btn ghost" data-i18n="set.clear"></button>
         </div>
-        <p class="note">Where the “Save as” window opens when <b>Ask path</b> is on.</p>
+        <p class="note" data-i18n-html="set.folderNote"></p>
       </div>
 
       <label class="switch">
         <input id="askPath" type="checkbox">
         <span class="slider"></span>
-        <span class="switch-text"><b>Ask path</b><small id="askNote"></small></span>
+        <span class="switch-text"><b data-i18n="set.ask"></b><small id="askNote"></small></span>
       </label>
 
       <label class="switch">
         <input id="fastCopy" type="checkbox">
         <span class="slider"></span>
-        <span class="switch-text"><b>Fast export</b><small>Copies the video without re-encoding. Much quicker, but the cut can land a moment away from the chosen point.</small></span>
+        <span class="switch-text"><b data-i18n="set.fast"></b><small data-i18n="set.fastNote"></small></span>
       </label>
 
-      <div class="dialog-foot"><button id="btnCloseSettings" class="btn primary">Done</button></div>
+      <div class="dialog-foot"><button id="btnCloseSettings" class="btn primary" data-i18n="set.done"></button></div>
     </div>
   </div>
 
   <!-- ===== Export progress ===== -->
   <div id="exportModal" class="modal" hidden>
     <div class="dialog small">
-      <h2 id="exportTitle">Exporting…</h2>
+      <h2 data-i18n="exp.title"></h2>
       <div class="bar"><div id="exportFill"></div></div>
-      <p id="exportText" class="note">Starting…</p>
-      <div class="dialog-foot"><button id="btnCancelExport" class="btn">Cancel</button></div>
+      <p id="exportText" class="note"></p>
+      <div class="dialog-foot"><button id="btnCancelExport" class="btn" data-i18n="common.cancel"></button></div>
     </div>
   </div>
 
   <div id="toast" hidden><span id="toastText"></span><button id="toastAction" class="btn" hidden></button></div>
 
+  <script src="i18n.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

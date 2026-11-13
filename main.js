@@ -8,7 +8,33 @@ const { pathToFileURL } = require('url');
 
 const VIDEO_EXTENSIONS = ['mp4', 'm4v', 'mkv', 'webm', 'mov', 'avi', 'wmv', 'flv', 'mpg', 'mpeg', 'ts', 'm2ts', '3gp', 'ogv'];
 
-const DEFAULT_SETTINGS = { exportDir: '', askPath: false, fastCopy: false };
+const DEFAULT_SETTINGS = { exportDir: '', askPath: false, fastCopy: false, language: 'fr' };
+
+const MESSAGES = {
+  fr: {
+    openTitle: 'Ouvrir une vidéo',
+    videos: 'Vidéos',
+    allFiles: 'Tous les fichiers',
+    folderTitle: 'Choisir le dossier d’export par défaut',
+    saveTitle: 'Exporter la partie sélectionnée',
+    video: 'Vidéo',
+    exportRunning: 'Un export est déjà en cours.',
+    sourceMissing: 'La vidéo source n’existe plus.',
+    convRunning: 'Une autre conversion est déjà en cours.',
+  },
+  en: {
+    openTitle: 'Open a video',
+    videos: 'Videos',
+    allFiles: 'All files',
+    folderTitle: 'Choose the default export folder',
+    saveTitle: 'Export the selected part',
+    video: 'Video',
+    exportRunning: 'An export is already running.',
+    sourceMissing: 'The source video no longer exists.',
+    convRunning: 'Another conversion is already running.',
+  },
+};
+const msg = () => MESSAGES[loadSettings().language] || MESSAGES.fr;
 
 let win = null;
 let pendingFile = null;
@@ -138,11 +164,11 @@ ipcMain.handle('file-info', (_e, p) => fileInfo(p));
 
 ipcMain.handle('pick-file', async () => {
   const res = await dialog.showOpenDialog(win, {
-    title: 'Open a video',
+    title: msg().openTitle,
     properties: ['openFile'],
     filters: [
-      { name: 'Videos', extensions: VIDEO_EXTENSIONS },
-      { name: 'All files', extensions: ['*'] },
+      { name: msg().videos, extensions: VIDEO_EXTENSIONS },
+      { name: msg().allFiles, extensions: ['*'] },
     ],
   });
   return res.canceled ? null : fileInfo(res.filePaths[0]);
@@ -150,7 +176,7 @@ ipcMain.handle('pick-file', async () => {
 
 ipcMain.handle('pick-folder', async (_e, current) => {
   const res = await dialog.showOpenDialog(win, {
-    title: 'Choose the default export folder',
+    title: msg().folderTitle,
     defaultPath: current || undefined,
     properties: ['openDirectory', 'createDirectory'],
   });
@@ -200,8 +226,8 @@ function runFfmpeg(args, { totalSeconds, onProgress }) {
 }
 
 ipcMain.handle('export', async (_e, { input, start, end }) => {
-  if (exportJob) return { ok: false, error: 'An export is already running.' };
-  if (!fileInfo(input)) return { ok: false, error: 'The source video no longer exists.' };
+  if (exportJob) return { ok: false, error: msg().exportRunning };
+  if (!fileInfo(input)) return { ok: false, error: msg().sourceMissing };
 
   const settings = loadSettings();
   const duration = Math.max(0.05, end - start);
@@ -214,9 +240,9 @@ ipcMain.handle('export', async (_e, { input, start, end }) => {
     let startDir = sourceDir;
     if (settings.exportDir && fs.existsSync(settings.exportDir)) startDir = settings.exportDir;
     const res = await dialog.showSaveDialog(win, {
-      title: 'Export the selected part',
+      title: msg().saveTitle,
       defaultPath: uniquePath(startDir, base, ext),
-      filters: [{ name: 'Video', extensions: [ext.slice(1)] }],
+      filters: [{ name: msg().video, extensions: [ext.slice(1)] }],
     });
     if (res.canceled || !res.filePath) return { ok: false, canceled: true };
     output = res.filePath;
@@ -270,7 +296,7 @@ ipcMain.handle('make-proxy', async (_e, input) => {
     '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart',
     '-progress', 'pipe:1', '-nostats', partial,
   ];
-  if (exportJob) return { ok: false, error: 'Another conversion is already running.' };
+  if (exportJob) return { ok: false, error: msg().convRunning };
   const total = await probeDuration(input);
   exportJob = runFfmpeg(args, { totalSeconds: total, onProgress: (p) => send('proxy-progress', p) });
   const result = await exportJob.done;

@@ -5,7 +5,7 @@ A simple Windows video viewer with a built-in trim editor.
 - Open a video (double-click, "Open with", drag & drop or `Ctrl+O`), play/pause, click the timeline to jump, volume, speed, frame step, fullscreen.
 - Trim editor under the timeline: drag the amber handles to keep only the part you want. The red line is the current moment and the handles snap onto it when close.
 - **Export** saves the selected part as a new video, next to the original by default.
-- **Settings**: default export folder, **Ask path** toggle (off = auto-save next to the original), **Fast export** (no re-encode).
+- **Settings**: language (French by default, English available), default export folder, **Ask path** toggle (off = auto-save next to the original), **Fast export** (no re-encode).
 
 ## Shortcuts
 
