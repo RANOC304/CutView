@@ -19,10 +19,12 @@ A simple Windows video viewer with a built-in trim editor.
 | F | Fullscreen |
 | Ctrl+O / Ctrl+E | Open / export |
 
-## Develop
+## Run from source
 
-```bash
-npm install
+Run the following on Windows with Node.js and npm installed.
+
+```powershell
+npm ci
 npm start            # run the app
 npm run dist         # build release/CutView-Setup-*.exe and release/CutView-*-portable.exe
 ```
@@ -30,3 +32,7 @@ npm run dist         # build release/CutView-Setup-*.exe and release/CutView-*-p
 Built with Electron; export and conversion use the bundled `ffmpeg-static`. Formats the player cannot decode (e.g. AVI) are converted to a temporary preview automatically; export always reads the original file.
 
 The installer registers CutView as a video app so it shows up in "Open with". The portable exe needs no install.
+
+## Contributing and license
+
+See the [contributor guide](CONTRIBUTING.md) for bug reports and pull requests. CutView's original code is available under the [MIT License](LICENSE). [Third-party notices](THIRD_PARTY_NOTICES.md) cover Electron and the bundled FFmpeg executable.

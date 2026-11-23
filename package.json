@@ -4,8 +4,8 @@
   "description": "Simple video viewer with a built-in trim editor",
   "main": "main.js",
   "private": true,
-  "author": "RANOC304",
-  "license": "UNLICENSED",
+  "author": "CutView contributors",
+  "license": "MIT",
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder --win nsis portable"
@@ -18,7 +18,7 @@
     "electron-builder": "^25.1.8"
   },
   "build": {
-    "appId": "com.ranoc304.cutview",
+    "appId": "org.cutview.app",
     "productName": "CutView",
     "directories": {
       "output": "release"
@@ -26,7 +26,9 @@
     "files": [
       "main.js",
       "preload.js",
-      "renderer/**/*"
+      "renderer/**/*",
+      "LICENSE",
+      "THIRD_PARTY_NOTICES.md"
     ],
     "asarUnpack": [
       "node_modules/ffmpeg-static/**"
